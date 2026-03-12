@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostel 5 Aryabhatta — Mess Management System</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h1>Hostel 5</h1>
+      <p>Aryabhatta · Mess System</p>
+      <span class="sidebar-badge">2025–2026</span>
+    </div>
+
+    <div class="sidebar-section">Main</div>
+    <div class="nav-item active" data-page="dashboard">
+      <span class="nav-icon">▦</span> Dashboard
+    </div>
+    <div class="nav-item" data-page="students">
+      <span class="nav-icon">◎</span> Students
+    </div>
+    <div class="nav-item" data-page="attendance">
+      <span class="nav-icon">✓</span> Meal Tracking
+    </div>
+
+    <div class="sidebar-section">Mess</div>
+    <div class="nav-item" data-page="menu">
+      <span class="nav-icon">☰</span> Weekly Menu
+    </div>
+    <div class="nav-item" data-page="holidays">
+      <span class="nav-icon">✈</span> Holidays &amp; Leaves
+      <span class="nav-badge" id="leave-badge"></span>
+    </div>
+
+    <div class="sidebar-section">Admin</div>
+    <div class="nav-item" data-page="billing">
+      <span class="nav-icon">₹</span> Billing
+    </div>
+    <div class="nav-item" data-page="register">
+      <span class="nav-icon">+</span> Register Student
+    </div>
+
+    <div class="sidebar-footer">
+      Dr. R.K. Sharma · Warden<br>
+      Mr. Suresh Kumar · Mess Manager
+    </div>
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <span id="topbar-title" class="topbar-title">Dashboard</span>
+      <input type="text" id="topbar-search" class="topbar-search" placeholder="Search students...">
+      <span id="topbar-date" class="topbar-date"></span>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Good morning, Dr. Sharma</div>
+          <div class="page-sub">Here's what's happening in Hostel 5 today.</div>
+        </div>
+        <button class="btn btn-primary" onclick="showPage('attendance')">Mark Today's Attendance</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-label">Total Students</div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-sub">Registered in hostel</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Active Mess Members</div>
+          <div class="stat-value" id="stat-active">—</div>
+          <div class="stat-sub">Currently enrolled</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-label">On Leave Today</div>
+          <div class="stat-value" id="stat-leave">—</div>
+          <div class="stat-sub">Approved leave</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Cancelled Today</div>
+          <div class="stat-value" id="stat-cancelled">—</div>
+          <div class="stat-sub">Meals cancelled</div>
+        </div>
+      </div>
+
+      <!-- Today's Meals -->
+      <div class="today-panel">
+        <h3>Today's Meal Attendance</h3>
+        <div class="meal-status-grid">
+          <div id="dash-meal-breakfast">
+            <div class="meal-card-name">Breakfast</div>
+            <div class="meal-card-count">—</div>
+            <div class="dash-meal-pct text-muted text-sm">7:00–9:00 AM</div>
+            <div class="progress mt-8"><div class="progress-bar green" style="width:0%"></div></div>
+          </div>
+          <div id="dash-meal-lunch">
+            <div class="meal-card-name">Lunch</div>
+            <div class="meal-card-count">—</div>
+            <div class="dash-meal-pct text-muted text-sm">12:30–2:30 PM</div>
+            <div class="progress mt-8"><div class="progress-bar green" style="width:0%"></div></div>
+          </div>
+          <div id="dash-meal-dinner">
+            <div class="meal-card-name">Dinner</div>
+            <div class="meal-card-count">—</div>
+            <div class="dash-meal-pct text-muted text-sm">7:30–9:30 PM</div>
+            <div class="progress mt-8"><div class="progress-bar amber" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Monthly Overview — <span id="dash-month"></span></span>
+          </div>
+          <table>
+            <tr><td class="text-muted">Total meals served</td><td style="text-align:right;font-weight:600;">5,847</td></tr>
+            <tr><td class="text-muted">Meals skipped</td><td style="text-align:right;font-weight:600;color:var(--color-amber);">412</td></tr>
+            <tr><td class="text-muted">Cancelled by students</td><td style="text-align:right;font-weight:600;color:var(--color-red);">238</td></tr>
+            <tr><td class="text-muted">Holiday meals</td><td style="text-align:right;font-weight:600;color:var(--color-gray);">0</td></tr>
+            <tr><td class="text-muted">Mess efficiency</td><td style="text-align:right;font-weight:600;color:var(--color-primary);">91.2%</td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Quick Actions</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <button class="btn btn-primary" onclick="showPage('attendance')">Mark Today's Meal Attendance</button>
+            <button class="btn btn-outline" onclick="showPage('menu')">View / Update Weekly Menu</button>
+            <button class="btn btn-amber" onclick="showPage('holidays')">Manage Leaves &amp; Holidays</button>
+            <button class="btn btn-outline" onclick="showPage('billing')">Generate Monthly Bills</button>
+            <button class="btn btn-outline" onclick="showPage('register')">Register New Student</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STUDENTS ══ -->
+    <div id="page-students" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Students <span id="student-count" class="badge badge-gray" style="font-size:14px;vertical-align:middle;"></span></div>
+          <div class="page-sub">All registered hostel mess members</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <select class="form-control" style="width:auto;" onchange="studentFilterBranch=this.value;renderStudents()">
+            <option value="">All Branches</option>
+            <option>Computer Science</option><option>Electronics</option><option>Mechanical</option>
+            <option>Electrical</option><option>Civil</option><option>Chemical</option>
+          </select>
+          <button class="btn btn-primary" onclick="showPage('register')">+ Register Student</button>
+        </div>
+      </div>
+
+      <div class="card card-bare">
+        <div class="table-wrap">
+          <table id="student-table">
+            <thead><tr>
+              <th>Student</th><th>Roll No.</th><th>Room</th><th>Course</th>
+              <th>Meal Plan</th><th>Meals (Month)</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="student-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ATTENDANCE ══ -->
+    <div id="page-attendance" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title" id="att-meal-name">Meal Tracking</div>
+          <div class="page-sub" id="att-date-label"></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="date" id="att-date" class="form-control" style="width:auto;">
+          <button class="btn btn-primary" onclick="saveAttendance()">Save Attendance</button>
+        </div>
+      </div>
+
+      <!-- Meal Cards -->
+      <div class="meal-status-grid mb-16">
+        <div class="meal-card active" id="meal-card-1" onclick="selectMeal(1)">
+          <div class="meal-card-name">Breakfast · 7:00–9:00 AM</div>
+          <div class="meal-card-count">—</div>
+        </div>
+        <div class="meal-card" id="meal-card-2" onclick="selectMeal(2)">
+          <div class="meal-card-name">Lunch · 12:30–2:30 PM</div>
+          <div class="meal-card-count">—</div>
+        </div>
+        <div class="meal-card" id="meal-card-3" onclick="selectMeal(3)">
+          <div class="meal-card-name">Dinner · 7:30–9:30 PM</div>
+          <div class="meal-card-count">—</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Student Attendance</span>
+          <div id="att-summary" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="markAllAttendance('present')">Mark All Present</button>
+          <button class="btn btn-amber btn-sm" onclick="markAllAttendance('absent')">Mark All Absent</button>
+          <button class="btn btn-danger btn-sm" onclick="markAllAttendance('cancelled')">Mark All Cancelled</button>
+          <button class="btn btn-outline btn-sm ml-auto" onclick="saveAttendance()">Save Changes</button>
+        </div>
+        <div id="att-list"></div>
+      </div>
+    </div>
+
+    <!-- ══ MENU ══ -->
+    <div id="page-menu" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Weekly Mess Menu</div>
+          <div class="page-sub" id="menu-week-label"></div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline" onclick="menuWeekStart=shiftWeek(-7);renderMenu()">← Previous</button>
+          <button class="btn btn-outline" onclick="menuWeekStart=shiftWeek(7);renderMenu()">Next →</button>
+        </div>
+      </div>
+      <div id="menu-list"></div>
+    </div>
+
+    <!-- ══ HOLIDAYS & LEAVES ══ -->
+    <div id="page-holidays" class="page">
+      <div class="page-header">
+        <div class="page-title">Holidays &amp; Leaves</div>
+      </div>
+      <div class="grid-2">
+        <!-- Holidays -->
+        <div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Declare Mess Holiday</span></div>
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="date" id="h-date" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Occasion / Reason</label>
+              <input type="text" id="h-occasion" class="form-control" placeholder="e.g. Diwali, Republic Day">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Meals Off</label>
+              <select id="h-meals" class="form-control">
+                <option>All Meals</option><option>Breakfast</option>
+                <option>Lunch</option><option>Dinner</option><option>Lunch+Dinner</option>
+              </select>
+            </div>
+            <button class="btn btn-primary w-full" onclick="declareHoliday()">Declare Holiday</button>
+          </div>
+
+          <div class="card card-bare mt-16">
+            <div style="padding:14px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--color-border);">Declared Holidays</div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Date</th><th>Occasion</th><th>Meals Off</th><th>Status</th><th></th></tr></thead>
+              <tbody id="holiday-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaves -->
+        <div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Submit Student Leave</span></div>
+            <div class="form-group">
+              <label class="form-label">Roll Number</label>
+              <input type="text" id="leave-roll" class="form-control" placeholder="e.g. 21CS047">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">From Date</label>
+                <input type="date" id="leave-from" class="form-control">
+              </div>
+              <div class="form-group">
+                <label class="form-label">To Date</label>
+                <input type="date" id="leave-to" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Reason</label>
+              <select id="leave-reason" class="form-control">
+                <option>Going Home</option><option>Medical Leave</option>
+                <option>Project / Internship</option><option>Field Trip</option><option>Other</option>
+              </select>
+            </div>
+            <button class="btn btn-primary w-full" onclick="submitLeave()">Submit Leave Request</button>
+          </div>
+
+          <div class="card card-bare mt-16">
+            <div style="padding:14px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--color-border);">Student Leave Requests</div>
+            <div class="table-wrap">
+              <table><thead><tr><th>Student</th><th>From</th><th>To</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="leave-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BILLING ══ -->
+    <div id="page-billing" class="page">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Monthly Billing</div>
+          <div class="page-sub" id="bill-month-label"></div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <select class="form-control" style="width:auto;" onchange="billingMonth=this.value;renderBilling()">
+            <option value="2026-03">March 2026</option>
+            <option value="2026-02">February 2026</option>
+            <option value="2026-01">January 2026</option>
+          </select>
+          <button class="btn btn-outline" onclick="generateAllBills()">Generate Bills</button>
+          <button class="btn btn-primary" onclick="exportBillingCSV()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-label">Total Billed</div>
+          <div class="stat-value" style="font-size:20px;" id="bill-total-amount">—</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Amount Collected</div>
+          <div class="stat-value" style="font-size:20px;" id="bill-paid-amount">—</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Pending Dues</div>
+          <div class="stat-value" style="font-size:20px;" id="bill-pending-amount">—</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-label">Payments</div>
+          <div class="stat-value" style="font-size:20px;" id="bill-paid-count">—</div>
+        </div>
+      </div>
+
+      <div class="card card-bare">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Student</th><th>Room</th><th>Meals</th><th>Meal Amt</th>
+              <th>Fixed</th><th>Deductions</th><th>Total</th><th>Status</th><th>Action</th>
+            </tr></thead>
+            <tbody id="billing-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ REGISTER ══ -->
+    <div id="page-register" class="page">
+      <div class="page-header">
+        <div class="page-title">Register New Student</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Personal Information</span></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">First Name *</label><input type="text" id="reg-fname" class="form-control" placeholder="Arjun"></div>
+              <div class="form-group"><label class="form-label">Last Name *</label><input type="text" id="reg-lname" class="form-control" placeholder="Sharma"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Roll Number *</label><input type="text" id="reg-roll" class="form-control" placeholder="22ME089"></div>
+              <div class="form-group"><label class="form-label">Room Number *</label><input type="text" id="reg-room" class="form-control" placeholder="G-104"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Course</label>
+                <select id="reg-course" class="form-control"><option>B.Tech</option><option>M.Tech</option><option>PhD</option><option>MBA</option><option>MCA</option></select>
+              </div>
+              <div class="form-group"><label class="form-label">Branch</label>
+                <select id="reg-branch" class="form-control">
+                  <option>Computer Science</option><option>Electronics</option><option>Mechanical</option>
+                  <option>Electrical</option><option>Civil</option><option>Chemical</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Year</label>
+                <select id="reg-year" class="form-control"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+              </div>
+              <div class="form-group"><label class="form-label">Phone</label><input type="text" id="reg-phone" class="form-control" placeholder="98XXXXXXXX"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Email</label><input type="text" id="reg-email" class="form-control" placeholder="rollno@hostel5.in"></div>
+            <div class="form-group"><label class="form-label">Parent Phone</label><input type="text" id="reg-parent" class="form-control" placeholder="Parent / Guardian number"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Mess Preferences</span></div>
+            <div class="form-group"><label class="form-label">Mess Start Date</label><input type="date" id="reg-start" class="form-control"></div>
+            <div class="form-group"><label class="form-label">Meal Plan</label>
+              <select id="reg-plan" class="form-control">
+                <option>Full Board</option><option>Lunch+Dinner</option>
+                <option>Breakfast+Lunch</option><option>Dinner Only</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Food Preference</label>
+              <select id="reg-food" class="form-control"><option>Vegetarian</option><option>Non-Vegetarian</option><option>Vegan</option></select>
+            </div>
+            <div class="form-group"><label class="form-label">Allergies</label><input type="text" id="reg-allergy" class="form-control" placeholder="e.g. Lactose, Nuts (leave blank if none)"></div>
+          </div>
+          <div class="card mt-16" style="margin-top:0;">
+            <div class="card-header"><span class="card-title">Options</span></div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+              <div class="flex-between">
+                <span style="font-size:13px;">Send welcome SMS to student</span>
+                <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="flex-between">
+                <span style="font-size:13px;">Send notification to parent</span>
+                <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="flex-between">
+                <span style="font-size:13px;">Generate mess card automatically</span>
+                <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" style="flex:1;" onclick="registerStudent()">Register Student</button>
+              <button class="btn btn-outline" onclick="document.querySelectorAll('#page-register input,#page-register select').forEach(e=>e.tagName==='SELECT'?e.selectedIndex=0:e.value='')">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div id="toast"></div>
+
+<!-- ══ MODAL: Student Detail ══ -->
+<div class="modal-overlay" id="modal-student" onclick="if(event.target===this)closeModal('modal-student')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Student Profile</span>
+      <button class="modal-close" onclick="closeModal('modal-student')">×</button>
+    </div>
+    <div id="modal-student-body"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: Edit Menu ══ -->
+<div class="modal-overlay" id="modal-menu" onclick="if(event.target===this)closeModal('modal-menu')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Menu — <span id="edit-menu-day"></span></span>
+      <button class="modal-close" onclick="closeModal('modal-menu')">×</button>
+    </div>
+    <div class="form-group"><label class="form-label">Breakfast</label><input type="text" id="edit-breakfast" class="form-control"></div>
+    <div class="form-group"><label class="form-label">Lunch</label><input type="text" id="edit-lunch" class="form-control"></div>
+    <div class="form-group"><label class="form-label">Dinner</label><input type="text" id="edit-dinner" class="form-control"></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveMenuEdit()">Save Menu</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-menu')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/database.js"></script>
+<script src="js/app.js"></script>
+<script>
+  function shiftWeek(days) {
+    const d = new Date(menuWeekStart);
+    d.setDate(d.getDate() + days);
+    return d.toISOString().split('T')[0];
+  }
+</script>
+
+</body>
+</html>
